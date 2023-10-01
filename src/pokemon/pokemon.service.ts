@@ -68,16 +68,18 @@ export class PokemonService {
     if (updatePokemonDto.name) updatePokemonDto.name.toLowerCase();
 
     try {
-      await pokemon.updateOne(updatePokemonDto); //new: true-> Muestra el nuevo valor
-
+      await pokemon.updateOne(updatePokemonDto);
       return { ...pokemon.toJSON(), ...updatePokemonDto };
     } catch (error) {
       this.handleExceptions(error);
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+  async remove(id: string) {
+    // const pokemon = await this.findOne(id);
+    // await pokemon.deleteOne();
+    const result = this.pokemonModel.findByIdAndDelete(id);
+    return result;
   }
 
   private handleExceptions(error: any) {
