@@ -52,18 +52,12 @@ export class PokemonService {
       });
     }
 
-    if (!pokemon)
-      throw new NotFoundException(
-        `Pokemon with id, name or no "${term}" not found`,
-      );
+    if (!pokemon) throw new NotFoundException(`Pokemon with id, name or no "${term}" not found`);
 
     return pokemon;
   }
 
-  async update(
-    term: string,
-    updatePokemonDto: UpdatePokemonDto,
-  ): Promise<Pokemon> {
+  async update(term: string, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon> {
     const pokemon = await this.findOne(term);
     if (updatePokemonDto.name) updatePokemonDto.name.toLowerCase();
 
@@ -83,21 +77,16 @@ export class PokemonService {
       _id: id,
     });
 
-    if (deletedCount === 0)
-      throw new BadRequestException(`Pokemon with id ${id} not found`);
+    if (deletedCount === 0) throw new BadRequestException(`Pokemon with id ${id} not found`);
 
     return;
   }
 
   private handleExceptions(error: any) {
     if (error.code === 11000) {
-      throw new BadRequestException(
-        `Pokemon exists in db ${JSON.stringify(error.keyValue)}`,
-      );
+      throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`);
     }
     console.log(error);
-    throw new InternalServerErrorException(
-      `Can't create Pokemon - Check server logs`,
-    );
+    throw new InternalServerErrorException(`Can't create Pokemon - Check server logs`);
   }
 }
