@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
+import { PokeResponse } from './interfaces/poke-response.interface';
 
 @Injectable()
 export class SeedService {
-  findAll() {
-    return `This action returns all seed`;
-  }
+  private readonly axios: AxiosInstance = axios;
 
-  findOne(id: number) {
-    return `This action returns a #${id} seed`;
-  }
+  async executeSeed() {
+    const { data } = await this.axios.get<PokeResponse>(
+      'https://pokeapi.co/api/v2/pokemon?limit=10',
+    );
 
-  remove(id: number) {
-    return `This action removes a #${id} seed`;
+    data.results.forEach(({ name, url }) => {
+      const segments = url.split('/');
+      const no: number = +segments[segments.length - 2];
+      console.log({ name, no });
+    });
+
+    return data.results;
   }
 }
